@@ -1,0 +1,16 @@
+[
+{
+  "modid": "nechar",
+  "name": "Not Enough Characters",
+  "description": "Search in NEI with Chinese Pinyin",
+  "version": "0.1",
+  "mcversion": "1.7.10",
+  "url": "ibalthild@gmail.com",
+  "updateUrl": "",
+  "authorList": ["balthild"],
+  "credits": "",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]

@@ -1,0 +1,5 @@
+build
+eclipse
+.gradle
+.idea
+*.iml
