@@ -4,12 +4,10 @@ import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import org.apache.logging.log4j.Logger;
 
-import java.util.logging.LogManager;
-
-@Mod(modid = NotEnoughCharacters.ID)
+@Mod(modid = NotEnoughCharacters.ID, useMetadata = true)
 public class NotEnoughCharacters {
     public static final String ID = "nechar";
-    public static final String VERSION = "0.1";
+    public static final String VERSION = "0.2";
 
     private static Logger logger;
 

@@ -17,8 +17,8 @@ buildscript {
 
 apply plugin: 'forge'
 
-version = "0.1"
-group = "net.moecraft.nechar" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+version = "1.7.10-0.2"
+group = "net.moecraft.nechar"
 archivesBaseName = "NotEnoughCharacters"
 
 minecraft {
