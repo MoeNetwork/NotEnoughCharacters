@@ -7,7 +7,7 @@ public class NEINecharConfig implements IConfigureNEI {
     @Override
     public void loadConfig() {
         API.addSearchProvider(new NecharSearchProvider());
-        NotEnoughCharacters.getLogger().info("search provider added!");
+        NotEnoughCharacters.logger.info("search provider added!");
     }
 
     @Override
