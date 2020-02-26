@@ -12,7 +12,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class NecharSearchFilter implements ItemFilter {
-    protected static PinIn context = new PinIn(Keyboard.QUANPIN, false, false, false, false, false, false, true);
+    // TODO: provide settings for fuzzy pinyin
+    protected static final PinIn context = new PinIn(Keyboard.QUANPIN, true, true, true, true, true, true, true);
 
     protected String mod = null;
 
