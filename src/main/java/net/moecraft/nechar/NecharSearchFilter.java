@@ -6,42 +6,85 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import me.towdium.pinin.Keyboard;
 import me.towdium.pinin.PinIn;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.oredict.OreDictionary;
 
-import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class NecharSearchFilter implements ItemFilter {
     // TODO: provide settings for fuzzy pinyin
     protected static final PinIn context = new PinIn(Keyboard.QUANPIN, true, true, true, true, true, true, true);
 
+    protected boolean invalid = false;
+
     protected String mod = null;
 
-    protected List<String> keywords = null;
+    protected String dict = null;
+
+    protected List<String> keywords = new LinkedList<>();
 
     public NecharSearchFilter(String searchText) {
         String[] pieces = searchText.split("\\s+");
 
-        if (pieces.length == 0)
-            return;
+        for (String piece : pieces) {
+            if (piece.isEmpty())
+                continue;
 
-        if (!pieces[0].isEmpty() && pieces[0].charAt(0) == '@') {
-            mod = pieces[0].substring(1);
-            keywords = Arrays.stream(pieces).skip(1).collect(Collectors.toList());
-        } else {
-            keywords = Arrays.asList(pieces);
+            switch (piece.charAt(0)) {
+                case '@':
+                    if (mod == null) {
+                        mod = piece.substring(1).toLowerCase();
+                        continue;
+                    } else {
+                        invalid = true;
+                        return;
+                    }
+
+                case '$':
+                    if (dict == null) {
+                        dict = piece.substring(1).toLowerCase();
+                        continue;
+                    } else {
+                        invalid = true;
+                        return;
+                    }
+            }
+
+            keywords.add(piece);
         }
     }
 
     @Override
     public boolean matches(ItemStack itemStack) {
-        if (mod != null && !mod.isEmpty()) {
-            GameRegistry.UniqueIdentifier itemId = GameRegistry.findUniqueIdentifierFor(itemStack.getItem());
+        return !invalid
+            && matchesMod(itemStack)
+            && matchesDict(itemStack)
+            && matchesKeywords(itemStack);
+    }
 
-            if (itemId == null || !itemId.modId.contains(mod))
-                return false;
-        }
+    protected boolean matchesMod(ItemStack itemStack) {
+        if (mod == null || mod.isEmpty())
+            return true;
 
+        GameRegistry.UniqueIdentifier itemId = GameRegistry.findUniqueIdentifierFor(itemStack.getItem());
+
+        return itemId != null && itemId.modId.toLowerCase().contains(mod);
+    }
+
+    protected boolean matchesDict(ItemStack itemStack) {
+        if (dict == null || dict.isEmpty())
+            return true;
+
+        int[] oreIds = OreDictionary.getOreIDs(itemStack);
+
+        for (int id : oreIds)
+            if (OreDictionary.getOreName(id).toLowerCase().contains(dict))
+                return true;
+
+        return false;
+    }
+
+    protected boolean matchesKeywords(ItemStack itemStack) {
         if (keywords == null || keywords.isEmpty())
             return true;
 
