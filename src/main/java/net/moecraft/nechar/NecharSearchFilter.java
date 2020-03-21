@@ -5,6 +5,7 @@ import codechicken.nei.api.ItemInfo;
 import cpw.mods.fml.common.registry.GameRegistry;
 import me.towdium.pinin.Keyboard;
 import me.towdium.pinin.PinIn;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 
@@ -18,7 +19,7 @@ public class NecharSearchFilter implements ItemFilter {
     protected boolean invalid = false;
 
     protected String mod = null;
-
+    protected String id = null;
     protected String dict = null;
 
     protected List<String> keywords = new LinkedList<>();
@@ -34,6 +35,15 @@ public class NecharSearchFilter implements ItemFilter {
                 case '@':
                     if (mod == null) {
                         mod = piece.substring(1).toLowerCase();
+                        continue;
+                    } else {
+                        invalid = true;
+                        return;
+                    }
+
+                case '&':
+                    if (id == null) {
+                        id = piece.substring(1).toLowerCase();
                         continue;
                     } else {
                         invalid = true;
@@ -58,6 +68,7 @@ public class NecharSearchFilter implements ItemFilter {
     public boolean matches(ItemStack itemStack) {
         return !invalid
             && matchesMod(itemStack)
+            && matchesId(itemStack)
             && matchesDict(itemStack)
             && matchesKeywords(itemStack);
     }
@@ -69,6 +80,15 @@ public class NecharSearchFilter implements ItemFilter {
         GameRegistry.UniqueIdentifier itemId = GameRegistry.findUniqueIdentifierFor(itemStack.getItem());
 
         return itemId != null && itemId.modId.toLowerCase().contains(mod);
+    }
+
+    protected boolean matchesId(ItemStack itemStack) {
+        if (id == null || id.isEmpty())
+            return true;
+
+        String itemId = Item.itemRegistry.getNameForObject(itemStack.getItem());
+
+        return itemId.toLowerCase().contains(id);
     }
 
     protected boolean matchesDict(ItemStack itemStack) {
