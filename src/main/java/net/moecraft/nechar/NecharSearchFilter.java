@@ -3,7 +3,6 @@ package net.moecraft.nechar;
 import codechicken.nei.api.ItemFilter;
 import codechicken.nei.api.ItemInfo;
 import cpw.mods.fml.common.registry.GameRegistry;
-import me.towdium.pinin.Keyboard;
 import me.towdium.pinin.PinIn;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -14,7 +13,11 @@ import java.util.List;
 
 public class NecharSearchFilter implements ItemFilter {
     // TODO: provide settings for fuzzy pinyin
-    protected static final PinIn context = new PinIn(Keyboard.QUANPIN, true, true, true, true, true, true, true);
+    protected static final PinIn context = new PinIn();
+
+    static {
+        context.config().fU2V(true).commit();
+    }
 
     protected boolean invalid = false;
 
